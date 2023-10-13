@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace与包名类名 一致-->
+<mapper namespace="com.imooc.oa.dao.EmployeeDao">
+<!--    id与方法名对应
+        parameter与方法参数类型对应
+        resultType与方法返回类型对应-->
+    <select id="selectById" parameterType="Long" resultType="com.imooc.oa.entity.Employee">
+        select * from adm_employee where employee_id=#{value}
+    </select>
+
+    <select id="selectLeader" parameterType="com.imooc.oa.entity.Employee" resultType="com.imooc.oa.entity.Employee">
+        select *
+        from adm_employee
+        where
+--             emp名字要与dao中函数的参数名相同--
+            <if test="emp.level &lt; 7">
+                level=7 and department_id=#{emp.departmentId}
+            </if>
+            <if test="emp.level == 7">
+--  --部门经理请假：返回总经理--
+                level=8
+            </if>
+            <if test="emp.level == 8">
+                employee_id=#{emp.employeeId} --返回总经理对象本身--
+            </if>
+
+    </select>
+</mapper>

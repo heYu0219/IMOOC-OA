@@ -29,12 +29,18 @@ public class LoginServlet extends HttpServlet {
         //接收用户输入
         String username=request.getParameter("username");
         String password=request.getParameter("password");
+        System.out.println(password);
         Map<String,Object> result=new HashMap<>();
         try {
             //调用业务逻辑
             User user=userService.checkLogin(username,password);
+            System.out.println(user);
+            HttpSession session=request.getSession();
+            //向session存入登陆用户信息，属性名login_user，以确保首页能够获取当前登录的用户
+            session.setAttribute("login_user",user);
             result.put("code","0");
             result.put("message","success");
+            result.put("redirect_url","/index");
         } catch (BussinessException ex){
             logger.error(ex.getMessage(),ex);
             result.put("code",ex.getCode());
@@ -46,7 +52,9 @@ public class LoginServlet extends HttpServlet {
             result.put("message",e.getMessage());
         }
         //返回对应结果
+//        System.out.println(result.entrySet());
         String json=JSON.toJSONString(result);
+//        System.out.println(json);
         response.getWriter().println(json);
     }
 }

@@ -30,15 +30,41 @@
     <h1 style="text-align: center;margin-bottom: 20px">慕课网办公OA系统</h1>
     <form class="layui-form">
         <div class="layui-form-item">
-            <input type="text" id="username" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+            <input type="text" id="username" name="username" lay-verify="required"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
         </div>
         <div class="layui-form-item">
-            <input type="password" id="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            <input type="password" id="password" name="password" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
         </div>
         <div class="layui-form-item">
+<!--            lay-filter相当于id,只在layui中用到-->
             <button  class="layui-btn layui-btn-fluid" lay-submit lay-filter="login">登录</button>
         </div>
     </form>
 </div>
+<script src="resources/layui/layui.js"></script>
+<script>
+     layui.form.on("submit(login)",function (formdata){//绑定lay-filter="login"的提交事件,data参数包含了当前表单的数据
+         console.log(formdata.field)
+         console.log(formdata);
+         layui.$.ajax({//发送Ajax请求,向后台发送前台的表单数据
+             url:"/check_login",
+             data:formdata.field,
+             type:"post",
+             dataType:"json",
+             success:function (json){
+                 console.log(json);
+                 if(json.code == "0"){
+                     // layui.layer.msg("登录成功！");
+                     //验证成功后，跳转url
+                     //在 HTML 中，可以使用超链接（）来发送 GET 请求。通过设置超链接的 href 属性，可以将参数附加到 URL 中，从而发送 GET 请求。
+                     window.location.href=json.redirect_url;
+                 }else{
+                     layui.layer.msg(json.message);
+                 }
+             }
+         })
+         return false;//submit提交事件返回true则表单提交，false则阻止表单提交
+     })
+</script>
 </body>
 </html>

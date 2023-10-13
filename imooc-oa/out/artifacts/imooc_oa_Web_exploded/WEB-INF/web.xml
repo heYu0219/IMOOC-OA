@@ -13,7 +13,7 @@
         </init-param>
         <init-param>
             <!--default_decoding用于设置读取ftl文件时采用的字符集-->
-            <param-name>default_en       coding</param-name>
+            <param-name>default_encoding</param-name>
             <param-value>UTF-8</param-value>
         </init-param>
     </servlet>
